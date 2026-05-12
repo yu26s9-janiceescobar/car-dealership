@@ -2,12 +2,13 @@ package com.pluralsight.data;
 import com.pluralsight.business.Dealership;
 import com.pluralsight.business.Vehicle;
 import java.io.*;
+import java.util.ArrayList;
 
 public class DealershipFileManager {
     private final String fileName;
 
     public DealershipFileManager(){
-        this.fileName = "data/inventory.csv";
+        fileName = "data/inventory.csv";
     }
 
     public Dealership getDealership(){
@@ -30,9 +31,38 @@ public class DealershipFileManager {
             return d;
         }
         catch( IOException e){
-            throw new RuntimeException("Cannot read dealership from file");
+            throw new RuntimeException("Cannot read dealership from file.");
         }
 
+    }
+
+    public void saveDealership(Dealership dealership){
+
+        try{
+            FileWriter fileWriter = new FileWriter(fileName);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            String firstLine = String.format("%s|%s|%s", dealership.getName(),dealership.getAddress(),dealership.getPhone());
+            bufferedWriter.write(firstLine);
+
+            ArrayList<Vehicle> vehicles = dealership.getAllVehicles();
+
+            for (Vehicle v: vehicles){
+                String vehicleInfo = String.format("%d|%d|%s|%s|%s|%s|%d|%,.2f",
+                        v.getVin(),
+                        v.getYear(),
+                        v.getMake() ,
+                        v.getModel(),
+                        v.getVehicleType(),
+                        v.getColor(),
+                        v.getOdometer(),
+                        v.getPrice());
+
+                bufferedWriter.write(vehicleInfo);
+            }
+            bufferedWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot save new dealership file.");
+        }
     }
 
 

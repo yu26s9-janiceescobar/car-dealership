@@ -1,5 +1,4 @@
 package com.pluralsight.ui;
-
 import com.pluralsight.business.Dealership;
 import com.pluralsight.business.Vehicle;
 import com.pluralsight.data.DealershipFileManager;
@@ -7,19 +6,19 @@ import java.util.ArrayList;
 
 public class UserInterface {
     private Dealership dealership;
+    private DealershipFileManager dealershipFileManager;
 
     private void init(){
-        DealershipFileManager dealershipFileManager = new DealershipFileManager();
-
+        dealershipFileManager = new DealershipFileManager();
         dealership = dealershipFileManager.getDealership();
-
     }
 
     public void display(){
         try{
+            init();
             int option;
             do {
-                init();
+
                 System.out.println("""
                 Dealership Main Menu
                 1 - Find vehicles within a price range
@@ -33,7 +32,7 @@ public class UserInterface {
                 9 - Remove a vehicle
                 99 - Quit""");
 
-                option = Console.promptForIntRange("> ","Invalid Input. Enter one of the following menu options.",1,9, 99);
+                option = Console.promptForIntRange("> ",1,9, 99);
                 switch (option) {
                     case 1:
                         processGetByPriceRequest();
@@ -77,9 +76,10 @@ public class UserInterface {
         ArrayList<Vehicle> vehicles = dealership.getAllVehicles();
         displayListOfVehicles(vehicles);
     }
+
     private void processGetByPriceRequest(){
-        double parseMin = Console.promptForCurrency("Enter Minimum Amount: ");
-        double parseMax = Console.promptForCurrency("Enter Maximum Amount: ");
+        double parseMin = Console.promptForCurrencyRange("Enter Minimum Amount: ", Dealership.MIN_VEHICLE_PRICE, Dealership.MAX_VEHICLE_PRICE, true);
+        double parseMax = Console.promptForCurrencyRange("Enter Maximum Amount: ", parseMin, Dealership.MAX_VEHICLE_PRICE, true); // Maximum price range cannot be lower than minimum price range entered by user.
         ArrayList<Vehicle> vehicles = dealership.getVehiclesByPrice(parseMin, parseMax);
         displayListOfVehicles(vehicles);
     }
@@ -91,9 +91,9 @@ public class UserInterface {
     }
 
     private void processGetByYearRequest(){
-        int minYear = Console.promptForIntRange("Enter Minimum Year: ","Must be between 1980 and 2026", 1980, 2026);
-        int maxYear = Console.promptForIntRange("Enter Maximum Year: ","Must be between " + minYear + " and 2026", minYear, 2026);
-        ArrayList<Vehicle> vehicles = dealership.getVehiclesByYear(minYear, maxYear);
+        int minYearInput = Console.promptForIntRange("Enter Minimum Year: ", Dealership.MIN_VEHICLE_YEAR, Dealership.MAX_VEHICLE_YEAR);
+        int maxYearInput = Console.promptForIntRange("Enter Maximum Year: ", minYearInput, Dealership.MAX_VEHICLE_YEAR);
+        ArrayList<Vehicle> vehicles = dealership.getVehiclesByYear(minYearInput, maxYearInput);
         displayListOfVehicles(vehicles);
 
     }
@@ -103,8 +103,8 @@ public class UserInterface {
         displayListOfVehicles(vehicles);
     }
     private void processGetByMileageRequest(){
-        int minMileage = Console.promptForIntRange("Enter Minimum Mileage: ","Must be between 0 and 300,000.", 0, 300000);
-        int maxMileage = Console.promptForIntRange("Enter Maximum Mileage: ", "Must be between " + minMileage + " and 300,000." ,minMileage, 300000);
+        int minMileage = Console.promptForIntRange("Enter Minimum Mileage: ", 0, Dealership.MAX_MILEAGE);
+        int maxMileage = Console.promptForIntRange("Enter Maximum Mileage: ", minMileage, Dealership.MAX_MILEAGE);
         ArrayList<Vehicle> vehicles = dealership.getVehicleByMileage(minMileage, maxMileage);
         displayListOfVehicles(vehicles);
     }
@@ -113,29 +113,40 @@ public class UserInterface {
         ArrayList<Vehicle> vehicles = dealership.getVehiclesByType(vehicleType);
         displayListOfVehicles(vehicles);
     }
+
     private void displayListOfVehicles(ArrayList<Vehicle> vehicles){
-        for (Vehicle v: vehicles){
-            System.out.println(v);
+        if (vehicles.isEmpty()){
+            System.out.println("No Vehicles Found.");
+        }
+        else {
+            for (Vehicle v : vehicles) {
+                System.out.println(v);
+            }
         }
     }
+
     private void processAddByRequest(){
         int vin = Console.promptForInt("Enter Vin Number: ");
-        int year = Console.promptForIntRange("Enter Year: ", "Year must be between 1980 and 2026", 1980, 2026);
+        int year = Console.promptForIntRange("Enter Year: ",  Dealership.MIN_VEHICLE_YEAR, Dealership.MAX_VEHICLE_YEAR);
         String make = Console.promptForString("Enter Make: ");
         String model = Console.promptForString("Enter Model: ");
         String vehicleType = Console.promptForString("Enter Vehicle Type: ");
         String color = Console.promptForString("Enter Color: ");
-        int odometer = Console.promptForInt("Enter Odometer: ");
-        double price = Console.promptForCurrency("Enter Price: ");
+        int odometer = Console.promptForIntRange("Enter Odometer: ",0, Dealership.MAX_MILEAGE);
+        double price = Console.promptForCurrencyRange("Enter Price: ", Dealership.MIN_VEHICLE_PRICE, Dealership.MAX_VEHICLE_PRICE, true);
         Vehicle vehicle = new Vehicle(vin, year, make, model, vehicleType, color, odometer, price);
+
+
         dealership.addVehicle(vehicle);
+        dealershipFileManager.saveDealership(dealership);
     }
+
     private void processRemoveVehicleRequest(){
         int vin = Console.promptForInt("Enter Vin Number: ");
-        for (Vehicle v: dealership.getAllVehicles() ){
-            if (v.getVin() == vin){
-                dealership.removeVehicle(v);
-            }
+        if (dealership.removeVehicle(vin)) {
+            dealershipFileManager.saveDealership(dealership);
+        }else{
+            System.out.println("Vehicle not found.");
         }
     }
 

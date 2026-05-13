@@ -1,5 +1,4 @@
 package com.pluralsight.business;
-import java.time.Year;
 import java.util.ArrayList;
 
 
@@ -7,16 +6,21 @@ public class Dealership {
     private String name;
     private String address;
     private String phone;
-    private ArrayList<Vehicle> inventory;
+    private final ArrayList<Vehicle> inventory;
+
+    public static int MIN_VEHICLE_YEAR = 1980;
+    public static int MAX_VEHICLE_YEAR = (java.time.LocalDate.now().getYear()) + 1;
+    public static double MIN_VEHICLE_PRICE = 1000;
+    public static double MAX_VEHICLE_PRICE = 500_000;
+    public static int MAX_MILEAGE = 300_000;
 
     public Dealership(String name, String address, String phone){
         this.name = name;
         this.address = address;
         this.phone = phone;
         inventory = new ArrayList<>();
+
     }
-
-
 
     public void setName(String name){
         this.name = name;
@@ -38,12 +42,16 @@ public class Dealership {
     public String getPhone(){
         return phone;
     }
+
+
     public ArrayList<Vehicle> getAllVehicles(){
         return inventory;
     }
+
     public void addVehicle(Vehicle vehicle){
         inventory.add(vehicle);
     }
+
     public ArrayList<Vehicle> getVehiclesByPrice(double min, double max){
         ArrayList<Vehicle> vehicleByPrice = new ArrayList<>();
         for (Vehicle vehicle: inventory) {
@@ -66,7 +74,7 @@ public class Dealership {
     public ArrayList<Vehicle> getVehiclesByYear(int min, int max){
         ArrayList<Vehicle> vehicleByYear = new ArrayList<>();
         for (Vehicle vehicle: inventory){
-            if (vehicle.getYear() < min && vehicle.getYear() < max){
+            if (vehicle.getYear() <= min && vehicle.getYear() <= max){
                 vehicleByYear.add(vehicle);
             }
         }
@@ -84,7 +92,7 @@ public class Dealership {
     public ArrayList<Vehicle> getVehicleByMileage(int min, int max){
         ArrayList<Vehicle> vehicleByMileage= new ArrayList<>();
         for (Vehicle vehicle: inventory){
-            if (vehicle.getOdometer() <= min && vehicle.getOdometer() >= max){
+            if (vehicle.getOdometer() >= min && vehicle.getOdometer() <= max){
                 vehicleByMileage.add(vehicle);
             }
         }
@@ -100,7 +108,27 @@ public class Dealership {
         }
         return vehicleByMileage;
     }
+
+
+    public Vehicle getVehicleByVin(int vin) {
+        for (Vehicle vehicle : inventory) {
+            if (vehicle.getVin() == vin) {
+                return vehicle;
+            }
+        }
+        return null;
+    }
+
     public void removeVehicle(Vehicle vehicle){
         inventory.remove(vehicle);
+    }
+
+    public boolean removeVehicle(int vin){
+        Vehicle vehicle = getVehicleByVin(vin);
+        if ( vehicle != null){
+            removeVehicle(vehicle);
+            return true;
+        }
+        return false;
     }
 }

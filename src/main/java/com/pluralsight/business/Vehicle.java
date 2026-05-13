@@ -20,7 +20,7 @@ public class Vehicle {
         this.odometer = odometer;
         this.price = price;
     }
-    public void setVin(int vin){
+    public void setVin(int vin){ // vin cannot be more than 5 characters.
         this.vin = vin;
     }
     public int getVin(){

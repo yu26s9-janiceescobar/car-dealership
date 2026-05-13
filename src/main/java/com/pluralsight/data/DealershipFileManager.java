@@ -9,8 +9,12 @@ public class DealershipFileManager {
 
     public DealershipFileManager(){
         fileName = "data/inventory.csv";
-    }
+    } // File containing preloaded information with Dealership information and existing vehicles in the dealership.
 
+    /**
+     * Creates a Dealership from preloaded file with vehicle information.
+     * @return Dealership with vehicles.
+     */
     public Dealership getDealership(){
         Dealership d;
         try {
@@ -36,18 +40,22 @@ public class DealershipFileManager {
 
     }
 
+    /**
+     * Saves Dealership containing vehicle information to CSV file.
+     * @param dealership containing vehicle information.
+     */
     public void saveDealership(Dealership dealership){
 
         try{
             FileWriter fileWriter = new FileWriter(fileName);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            String firstLine = String.format("%s|%s|%s", dealership.getName(),dealership.getAddress(),dealership.getPhone());
+            String firstLine = String.format("%s|%s|%s %n", dealership.getName(),dealership.getAddress(),dealership.getPhone());
             bufferedWriter.write(firstLine);
 
             ArrayList<Vehicle> vehicles = dealership.getAllVehicles();
 
             for (Vehicle v: vehicles){
-                String vehicleInfo = String.format("%d|%d|%s|%s|%s|%s|%d|%,.2f",
+                String vehicleInfo = String.format("%d|%d|%s|%s|%s|%s|%d|%.2f %n",
                         v.getVin(),
                         v.getYear(),
                         v.getMake() ,
@@ -65,13 +73,22 @@ public class DealershipFileManager {
         }
     }
 
-
+    /**
+     * Gets Dealership information from a String containing the name, address, and phone number of dealership.
+     * @param s String containing Dealership information.
+     * @return Dealership with dealership information.
+     */
     private Dealership makeDealershipFromEncodedString(String s){
         String[] dealerInfo = s.split("\\|");
 
          return new Dealership(dealerInfo[0], dealerInfo[1], dealerInfo[2]);
     }
 
+    /**
+     * Gets Vehicle information from a String containing the VIN, year, make, model, vehicle type, color, odometer, and price of vehicle.
+     * @param s the string containing vehicle information.
+     * @return Vehicle with vehicle information.
+     */
     private Vehicle makeVehicleFromEncodedString(String s){
         String[] fileLine = s.split("\\|");
 

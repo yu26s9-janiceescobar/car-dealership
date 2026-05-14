@@ -8,7 +8,7 @@ public class Dealership {
     private String phone;
     private final ArrayList<Vehicle> inventory;
 
-    public static int MIN_VEHICLE_YEAR = 1980;
+    public static int MIN_VEHICLE_YEAR = 1950;
     public static int MAX_VEHICLE_YEAR = (java.time.LocalDate.now().getYear()) + 1;
     public static double MIN_VEHICLE_PRICE = 1000;
     public static double MAX_VEHICLE_PRICE = 500_000;

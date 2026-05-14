@@ -8,37 +8,37 @@ A LeaseContract will include the following additional information:
 • All leases are financed at 4.0% for 36 months
  */
 public class LeaseContract extends Contract{
-    private double expectedEndingVal;
-    private double leaseFee;
+    private double expectedEndingRate;
+    private double leasingFeeRate;
     private double annualInterestRate;
     private int leasingTerm;
 
     public LeaseContract(String date, String name, String email, Vehicle vehicle){
         super(date, name, email, vehicle);
-        this.expectedEndingVal = .5;
-        this.leaseFee = .07;
-        this.annualInterestRate = .04;
-        this.leasingTerm = 36;
+        expectedEndingRate = .5;
+        leasingFeeRate = .07;
+        annualInterestRate = .04;
+        leasingTerm = 36;
     }
     @Override
     public double getMonthlyPayment(){
-
+        return 
     }
     @Override
     public double getTotalPrice(){
 
     }
-    public void setExpectedEndingValue(double expectedEndingVal){
-        this.expectedEndingVal = expectedEndingVal;
+    public void expectedEndingRate(double expectedEndingRate){
+        this.expectedEndingRate = expectedEndingRate;
     }
-    public double getExpectedEndingVal(){
-        return expectedEndingVal;
+    public double getExpectedEndingRate(){
+        return expectedEndingRate;
     }
-    public void setLeaseFee(double leaseFee){
-        this.leaseFee = leaseFee;
+    public void setLeasingFeeRate(double leasingFeeRate){
+        this.leasingFeeRate = leasingFeeRate;
     }
-    public double getLeaseFee(){
-        return leaseFee;
+    public double getLeasingFeeRate(){
+        return leasingFeeRate;
     }
     public void setAnnualInterestRate(double annualInterestRate){
         this.annualInterestRate = annualInterestRate;

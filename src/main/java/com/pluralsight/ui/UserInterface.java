@@ -71,7 +71,7 @@ public class UserInterface {
             }while (option != 99);
         }
         catch(RuntimeException e){
-            System.out.println("There was an error reading from the file: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
 
     }
@@ -153,7 +153,7 @@ public class UserInterface {
         }
     }
     private void processSaleLease(){
-        
+
     }
 
 }

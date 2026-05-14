@@ -10,30 +10,37 @@ Sales Tax Amount (5%)
 */
 public class SalesContract extends Contract{
     private boolean isFinance;
-    private final double salesTax;
+    private final double salesTaxRate;
     private final double recordingFee;
 
-    public SalesContract(boolean isFinance, String date, String name, String email, Vehicle vehicle){
+    public SalesContract(String date, String name, String email, Vehicle vehicle, boolean isFinance){
         super(date, name, email, vehicle);
         this.isFinance = isFinance;
-        salesTax = .5;
+        salesTaxRate = .5;
         recordingFee = 100;
 
     }
 
     @Override
     public double getMonthlyPayment(){
-        return isFinance ? Math.pow(getTotalPrice() * getInterestRate(), getTotalMonths()) : 0; 
+        double monthlyInterestRate = getAnnualInterestRate() / 12;
+        double monthlyPayment = getSubtotalPrice() * (monthlyInterestRate * Math.pow(monthlyInterestRate + 1, getTotalMonths())) / (Math.pow(monthlyInterestRate + 1, getTotalMonths()) - 1); // MonthlyPayment = principal * (((monthlyRate)(monthlyRate + 1)^months) / (((1 + monthlyRate)^months) - 1))
+        return isFinance ? monthlyPayment : 0;
     }
 
     @Override
     public double getTotalPrice(){
-        return (getVehicle().getPrice() * (salesTax + 1) + recordingFee + getProcessingFee());
+        return isFinance ? (getMonthlyPayment() * getTotalMonths()): getSubtotalPrice();
     }
+
+    public double getSubtotalPrice(){
+        return (getVehicle().getPrice() * (salesTaxRate + 1) + recordingFee + getProcessingFee());
+    }
+
     public int getTotalMonths(){
         return getVehicle().getPrice() < 10000 ? 24 : 48;
     }
-    public double getInterestRate(){
+    public double getAnnualInterestRate(){
        return getVehicle().getPrice() < 10000 ? .0425 : .0525;
     }
     public double getProcessingFee(){
@@ -45,5 +52,12 @@ public class SalesContract extends Contract{
     }
     public boolean getFinance(){
         return isFinance;
+    }
+
+    public double getSalesTaxRate(){
+        return salesTaxRate;
+    }
+    public double getRecordingFee(){
+        return recordingFee;
     }
 }

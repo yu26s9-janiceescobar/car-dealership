@@ -48,9 +48,9 @@ public class Console {
            if (showOptions){
                System.out.printf("Must be between $%,.2f and $%,.2f %n", min, max);
            }
+           String input = promptForString(prompt);
             try {
-                String input = promptForString(prompt);
-
+                
                 double parseCurrency = parseCurrency(parseDouble(input));
 
                 if(!(min > max) && !(parseCurrency < min) && !(parseCurrency > max)){

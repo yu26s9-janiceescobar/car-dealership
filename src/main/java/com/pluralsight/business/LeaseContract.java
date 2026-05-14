@@ -6,27 +6,43 @@ A LeaseContract will include the following additional information:
 • Lease Fee (7% of the original price)
 • Monthly payment based on
 • All leases are financed at 4.0% for 36 months
+
+Car costs: 30,000
+Residual value expected to be : 18,000
+You pay for: 12,000
+
  */
 public class LeaseContract extends Contract{
     private double expectedEndingRate;
     private double leasingFeeRate;
     private double annualInterestRate;
-    private int leasingTerm;
+    private int totalMonths;
 
     public LeaseContract(String date, String name, String email, Vehicle vehicle){
         super(date, name, email, vehicle);
         expectedEndingRate = .5;
         leasingFeeRate = .07;
         annualInterestRate = .04;
-        leasingTerm = 36;
+        totalMonths = 36;
     }
+    // MonthlyPayment = principal * (((monthlyRate)(monthlyRate + 1)^months) / (((1 + monthlyRate)^months) - 1))
     @Override
     public double getMonthlyPayment(){
-        return 
+        double monthlyInterestRate = annualInterestRate / 12;
+        return getSubtotalPrice()  * ((Math.pow(monthlyInterestRate *(monthlyInterestRate + 1), totalMonths) / (Math.pow((1 + monthlyInterestRate), totalMonths) - 1)));
     }
     @Override
     public double getTotalPrice(){
-
+        return (getMonthlyPayment() * totalMonths);
+    }
+    public double getSubtotalPrice(){
+        return calculateExpectedEndingValue() + calculateLeasingFee();
+    }
+    public double calculateExpectedEndingValue(){
+        return getVehicle().getPrice() * expectedEndingRate;
+    }
+    public double calculateLeasingFee(){
+        return leasingFeeRate * getVehicle().getPrice();
     }
     public void expectedEndingRate(double expectedEndingRate){
         this.expectedEndingRate = expectedEndingRate;
@@ -46,10 +62,10 @@ public class LeaseContract extends Contract{
     public double getAnnualInterestRate(){
         return annualInterestRate;
     }
-    public void setLeasingTerm(int leasingTerm){
-        this.leasingTerm = leasingTerm;
+    public void setLeasingTerm(int totalMonths){
+        this.totalMonths = totalMonths;
     }
     public int getLeasingTerm(){
-        return leasingTerm;
+        return totalMonths;
     }
 }

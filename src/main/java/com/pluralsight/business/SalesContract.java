@@ -18,22 +18,21 @@ public class SalesContract extends Contract{
         this.isFinance = isFinance;
         salesTaxRate = .5;
         recordingFee = 100;
-
     }
 
     @Override
     public double getMonthlyPayment(){
         double monthlyInterestRate = getAnnualInterestRate() / 12;
-        double monthlyPayment = getSubtotalPrice() * (monthlyInterestRate * Math.pow(monthlyInterestRate + 1, getTotalMonths())) / (Math.pow(monthlyInterestRate + 1, getTotalMonths()) - 1); // MonthlyPayment = principal * (((monthlyRate)(monthlyRate + 1)^months) / (((1 + monthlyRate)^months) - 1))
+        double monthlyPayment = calculateSubtotalPrice() * (monthlyInterestRate * Math.pow(monthlyInterestRate + 1, getTotalMonths())) / (Math.pow(monthlyInterestRate + 1, getTotalMonths()) - 1); // MonthlyPayment = principal * (((monthlyRate)(monthlyRate + 1)^months) / (((1 + monthlyRate)^months) - 1))
         return isFinance ? monthlyPayment : 0;
     }
 
     @Override
     public double getTotalPrice(){
-        return isFinance ? (getMonthlyPayment() * getTotalMonths()): getSubtotalPrice();
+        return isFinance ? (getMonthlyPayment() * getTotalMonths()): calculateSubtotalPrice();
     }
 
-    public double getSubtotalPrice(){
+    public double calculateSubtotalPrice(){
         return (getVehicle().getPrice() * (salesTaxRate + 1) + recordingFee + getProcessingFee());
     }
 

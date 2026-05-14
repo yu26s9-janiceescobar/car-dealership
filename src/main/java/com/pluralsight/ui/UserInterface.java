@@ -1,5 +1,6 @@
 package com.pluralsight.ui;
 import com.pluralsight.business.Dealership;
+import com.pluralsight.business.SalesContract;
 import com.pluralsight.business.Vehicle;
 import com.pluralsight.data.DealershipFileManager;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class UserInterface {
     }
 
     public void display(){
+        processSaleLease();
         try{
             init();
             int option;
@@ -153,7 +155,9 @@ public class UserInterface {
         }
     }
     private void processSaleLease(){
-
+        Vehicle vehicle = new Vehicle(12345, 2025, "make","model", "vehicle type","red", 525123, 995.00 );
+        SalesContract salesContract = new SalesContract("2020-01-01","Janice","janice email", vehicle, true);
+        System.out.println(salesContract.getMonthlyPayment());
     }
 
 }

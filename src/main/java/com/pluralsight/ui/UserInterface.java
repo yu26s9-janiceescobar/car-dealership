@@ -30,9 +30,10 @@ public class UserInterface {
                 7 - List ALL vehicles
                 8 - Add a vehicle
                 9 - Remove a vehicle
+                10 - Sell / Lease vehicle
                 99 - Quit""");
 
-                option = Console.promptForIntRange("> ",1,9, 99);
+                option = Console.promptForIntRange("> ",1,10, 99);
                 switch (option) {
                     case 1:
                         processGetByPriceRequest();
@@ -61,6 +62,8 @@ public class UserInterface {
                     case 9:
                         processRemoveVehicleRequest();
                         break;
+                    case 10:
+                        //processSaleLease();
                     case 99:
                         System.out.println("Exiting Application...");
                         break;
@@ -148,6 +151,9 @@ public class UserInterface {
         }else{
             System.out.println("Vehicle not found.");
         }
+    }
+    private void processSaleLease(){
+        
     }
 
 }

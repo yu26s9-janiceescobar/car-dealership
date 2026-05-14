@@ -43,7 +43,7 @@ public class Console {
      * @param showOptions will display message regarding options to user if true.
      * @return double entered by user and accepted as a currency amount.
      */
-    public static double promptForCurrencyRange(String prompt, double min, double max, boolean showOptions){
+    public static double promptForCurrencyRange(String prompt, double min, double max, boolean showOptions){ // Do I need a boolean if options is always shown?
         while (true){
            if (showOptions){
                System.out.printf("Must be between $%,.2f and $%,.2f %n", min, max);

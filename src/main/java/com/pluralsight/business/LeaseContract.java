@@ -13,10 +13,10 @@ You pay for: 12,000
 
  */
 public class LeaseContract extends Contract{
-    private double expectedEndingRate;
-    private double leasingFeeRate;
-    private double annualInterestRate;
-    private int totalMonths;
+    private final double expectedEndingRate;
+    private final double leasingFeeRate;
+    private final double annualInterestRate;
+    private final int totalMonths;
 
     public LeaseContract(String date, String name, String email, Vehicle vehicle){
         super(date, name, email, vehicle);
@@ -29,43 +29,45 @@ public class LeaseContract extends Contract{
     @Override
     public double getMonthlyPayment(){
         double monthlyInterestRate = annualInterestRate / 12;
-        return getSubtotalPrice()  * ((Math.pow(monthlyInterestRate *(monthlyInterestRate + 1), totalMonths) / (Math.pow((1 + monthlyInterestRate), totalMonths) - 1)));
+        double principal = getVehicle().getPrice() - calculateExpectedEndingValue();
+        double feesPerMonth = calculateLeasingFee() / totalMonths;
+        double monthlyPayment = principal * ((monthlyInterestRate) * (Math.pow(monthlyInterestRate + 1, totalMonths) / (Math.pow(1 + monthlyInterestRate, totalMonths) - 1)));
+        monthlyPayment += feesPerMonth;
+        return monthlyPayment;
+
     }
     @Override
     public double getTotalPrice(){
-        return (getMonthlyPayment() * totalMonths);
+        return getMonthlyPayment() * totalMonths;
     }
-    public double getSubtotalPrice(){
-        return calculateExpectedEndingValue() + calculateLeasingFee();
-    }
+
     public double calculateExpectedEndingValue(){
         return getVehicle().getPrice() * expectedEndingRate;
     }
+
     public double calculateLeasingFee(){
         return leasingFeeRate * getVehicle().getPrice();
     }
-    public void expectedEndingRate(double expectedEndingRate){
-        this.expectedEndingRate = expectedEndingRate;
-    }
+
     public double getExpectedEndingRate(){
         return expectedEndingRate;
     }
-    public void setLeasingFeeRate(double leasingFeeRate){
-        this.leasingFeeRate = leasingFeeRate;
-    }
+
     public double getLeasingFeeRate(){
         return leasingFeeRate;
-    }
-    public void setAnnualInterestRate(double annualInterestRate){
-        this.annualInterestRate = annualInterestRate;
     }
     public double getAnnualInterestRate(){
         return annualInterestRate;
     }
-    public void setLeasingTerm(int totalMonths){
-        this.totalMonths = totalMonths;
-    }
     public int getLeasingTerm(){
         return totalMonths;
+    }
+    @Override
+    public String toString(){
+        return String.format("%.2f|%.2f|%.2f|%.2f",
+                calculateExpectedEndingValue(),
+                calculateLeasingFee(),
+                getTotalPrice(),
+                getMonthlyPayment());
     }
 }

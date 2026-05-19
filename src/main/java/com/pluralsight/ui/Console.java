@@ -13,28 +13,27 @@ public class Console {
         return scanner.nextLine().strip().toLowerCase();
     }
 
-//    public static double promptForDouble(String prompt){
-//        while (true) {
-//            try {
-//                String input = promptForString(prompt);
-//                return parseDouble(input);
-//            } catch (IllegalArgumentException e) {
-//                System.out.println(e.getMessage());
-//            }
-//        }
-//    }
+    public static boolean promptForYesNoInput(String prompt){
+        while (true){
+            String input = promptForString(prompt);
+            if (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("n") || input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("no")){
+                return input.equalsIgnoreCase("yes");
+            }
+            System.out.println("Must enter YES or NO.");
+        }
+    }
+    public static String promptForCharacterOptions(String prompt, String... options){
+        while(true){
+            String input = promptForString(prompt);
+            for (String o: options){
+                if (input.equalsIgnoreCase(o)){
+                    return o;
+                }
+            }
+            System.out.println("Must enter a valid option.");
+        }
 
-//    public static double promptForCurrency(String prompt){
-//        while (true){
-//            try {
-//                String input = promptForString(prompt);
-//                return parseCurrency(parseDouble(input));
-//            }catch(IllegalArgumentException e){
-//                System.out.println(e.getMessage());
-//            }
-//        }
-//    }
-
+    }
     /**
      * Prompts the user to enter a valid currency amount within a given range.
      * @param prompt the message displayed to the user.

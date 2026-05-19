@@ -16,24 +16,26 @@ public class SalesContract extends Contract{
     public SalesContract(String date, String name, String email, Vehicle vehicle, boolean isFinance){
         super(date, name, email, vehicle);
         this.isFinance = isFinance;
-        salesTaxRate = .5;
+        salesTaxRate = .05;
         recordingFee = 100;
     }
 
     @Override
     public double getMonthlyPayment(){
         double monthlyInterestRate = getAnnualInterestRate() / 12;
-        double monthlyPayment = calculateSubtotalPrice() * (monthlyInterestRate * Math.pow(monthlyInterestRate + 1, getTotalMonths())) / (Math.pow(monthlyInterestRate + 1, getTotalMonths()) - 1); // MonthlyPayment = principal * (((monthlyRate)(monthlyRate + 1)^months) / (((1 + monthlyRate)^months) - 1))
+        double feesPerMonth = (calculateSalesTax() + recordingFee + getProcessingFee()) / getTotalMonths();
+        double monthlyPayment = getVehicle().getPrice() * (monthlyInterestRate * Math.pow(monthlyInterestRate + 1, getTotalMonths())) / (Math.pow(monthlyInterestRate + 1, getTotalMonths()) - 1); // MonthlyPayment = principal * (((monthlyRate)(monthlyRate + 1)^months) / (((1 + monthlyRate)^months) - 1))
+        monthlyPayment += feesPerMonth;
         return isFinance ? monthlyPayment : 0;
     }
 
     @Override
     public double getTotalPrice(){
-        return isFinance ? (getMonthlyPayment() * getTotalMonths()): calculateSubtotalPrice();
+        return isFinance ? (getMonthlyPayment() * getTotalMonths()): calculatePayInFullPrice();
     }
 
-    public double calculateSubtotalPrice(){
-        return (getVehicle().getPrice() * (salesTaxRate + 1) + recordingFee + getProcessingFee());
+    public double calculatePayInFullPrice(){
+        return ((getVehicle().getPrice() * (salesTaxRate + 1)) + recordingFee + getProcessingFee());
     }
 
     public int getTotalMonths(){
@@ -44,6 +46,9 @@ public class SalesContract extends Contract{
     }
     public double getProcessingFee(){
         return getVehicle().getPrice() < 10000 ? 295 : 495;
+    }
+    public double calculateSalesTax(){
+        return getVehicle().getPrice() * salesTaxRate;
     }
 
     public void setFinance(boolean isFinance){
@@ -58,5 +63,9 @@ public class SalesContract extends Contract{
     }
     public double getRecordingFee(){
         return recordingFee;
+    }
+    @Override
+    public String toString(){
+        return String.format("%,.2f|%,.2f|%,.2f|%,.2f|%s|%,.2f", calculateSalesTax(), recordingFee, getProcessingFee(), getTotalPrice(), isFinance ? "YES" : "NO", getMonthlyPayment() );
     }
 }

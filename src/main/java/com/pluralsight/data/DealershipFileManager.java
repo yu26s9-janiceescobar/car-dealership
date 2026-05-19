@@ -80,7 +80,6 @@ public class DealershipFileManager {
      */
     private Dealership makeDealershipFromEncodedString(String s){
         String[] dealerInfo = s.split("\\|");
-
          return new Dealership(dealerInfo[0], dealerInfo[1], dealerInfo[2]);
     }
 

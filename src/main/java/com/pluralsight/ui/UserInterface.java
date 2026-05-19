@@ -1,21 +1,25 @@
 package com.pluralsight.ui;
-import com.pluralsight.business.Dealership;
-import com.pluralsight.business.SalesContract;
-import com.pluralsight.business.Vehicle;
+import com.pluralsight.business.*;
+import com.pluralsight.data.ContractFileManager;
 import com.pluralsight.data.DealershipFileManager;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class UserInterface {
     private Dealership dealership;
     private DealershipFileManager dealershipFileManager;
+    private ContractFileManager contractFileManager;
+    private ArrayList<Contract> contracts;
 
     private void init(){
         dealershipFileManager = new DealershipFileManager();
         dealership = dealershipFileManager.getDealership();
+        contractFileManager = new ContractFileManager();
+        contracts = contractFileManager.getContracts();
     }
 
     public void display(){
-        processSaleLease();
         try{
             init();
             int option;
@@ -65,7 +69,7 @@ public class UserInterface {
                         processRemoveVehicleRequest();
                         break;
                     case 10:
-                        //processSaleLease();
+                        SaleLeaseDisplay();
                     case 99:
                         System.out.println("Exiting Application...");
                         break;
@@ -154,10 +158,40 @@ public class UserInterface {
             System.out.println("Vehicle not found.");
         }
     }
-    private void processSaleLease(){
-        Vehicle vehicle = new Vehicle(12345, 2025, "make","model", "vehicle type","red", 525123, 995.00 );
-        SalesContract salesContract = new SalesContract("2020-01-01","Janice","janice email", vehicle, true);
-        System.out.println(salesContract.getMonthlyPayment());
+    private void SaleLeaseDisplay(){
+        String option;
+        do {
+            System.out.println("[S] Sale [L] Lease [X] Main Menu");
+            option = Console.promptForCharacterOptions("> ", "s", "l", "x");
+            boolean isSale = option.equalsIgnoreCase("s");
+            processSaleLease(isSale);
+
+        }while(!option.equalsIgnoreCase( "x"));
     }
+    private void processSaleLease(boolean isSale){
+        Vehicle vehicle;
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String date = LocalDate.now().format(fmt);
+        String name = Console.promptForString("Enter Name: ");
+        String email = Console.promptForString("Enter Email: ");
+        do {
+            int vin = Console.promptForInt("Enter Vin Number of Vehicle: ");
+            vehicle = dealership.getVehicleByVin(vin);
+            if (vehicle == null){
+                System.out.println("Vehicle not Found. Please Try Again.");
+            }
+        }while (vehicle == null);
+
+        if (isSale){
+            boolean isFinance = Console.promptForYesNoInput("Are you financing your vehicle? [Y] Yes [N] No \n> ");
+            SalesContract salesContract = new SalesContract(date, name, email, vehicle, isFinance);
+            contracts.add(salesContract);
+        }else{
+            LeaseContract leaseContract = new LeaseContract(date, name, email,vehicle);
+            contracts.add(leaseContract);
+        }
+        contractFileManager.saveContracts(contracts);
+    }
+
 
 }

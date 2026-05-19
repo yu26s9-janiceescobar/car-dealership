@@ -1,17 +1,6 @@
 package com.pluralsight.business;
 
-/*
-A LeaseContract will include the following additional information:
-• Expected Ending Value (50% of the original price)
-• Lease Fee (7% of the original price)
-• Monthly payment based on
-• All leases are financed at 4.0% for 36 months
 
-Car costs: 30,000
-Residual value expected to be : 18,000
-You pay for: 12,000
-
- */
 public class LeaseContract extends Contract{
     private final double expectedEndingRate;
     private final double leasingFeeRate;

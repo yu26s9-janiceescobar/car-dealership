@@ -33,7 +33,9 @@ public class ContractFileManager {
     }
 
     private Contract makeContractFromEncodedString(String line){
-
+        if (line.isBlank()){
+            return null;
+        }
         Vehicle vehicle = makeVehicleFromEncodedString(line);
 
         String[] fileLine = line.split("\\|");
@@ -70,7 +72,7 @@ public class ContractFileManager {
     public String makeFileLine(Contract contract){
         Vehicle vehicle = contract.getVehicle();
         String type = contract instanceof SalesContract ? "SALE" : "LEASE";
-        return String.format("%s|%s|%s|%s|%d|%d|%s|%s|%s|%s|%d|%.2f|%s|%.2f|%.2f %n",
+        return String.format("%s|%s|%s|%s|%d|%d|%s|%s|%s|%s|%d|%.2f|%s%n",
                 type,
                 contract.getDate(),
                 contract.getName(),
@@ -83,9 +85,7 @@ public class ContractFileManager {
                 vehicle.getColor(),
                 vehicle.getOdometer(),
                 vehicle.getPrice(),
-                contract,
-                contract.getTotalPrice(),
-                contract.getMonthlyPayment()
+                contract
                 );
 
     }

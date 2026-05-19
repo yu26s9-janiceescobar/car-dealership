@@ -16,10 +16,10 @@ public class Console {
     public static boolean promptForYesNoInput(String prompt){
         while (true){
             String input = promptForString(prompt);
-            if (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("n") || input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("no")){
-                return input.equalsIgnoreCase("yes");
+            if (input.equalsIgnoreCase("y") || input.equalsIgnoreCase("n")){
+                return input.equalsIgnoreCase("y");
             }
-            System.out.println("Must enter YES or NO.");
+            System.out.println("Must enter [Y] or [N].");
         }
     }
     public static String promptForCharacterOptions(String prompt, String... options){

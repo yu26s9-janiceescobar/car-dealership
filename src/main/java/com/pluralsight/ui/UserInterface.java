@@ -39,7 +39,7 @@ public class UserInterface {
                 10 - Sell / Lease vehicle
                 99 - Quit""");
 
-                option = Console.promptForIntRange("> ",1,10, 99);
+                option = Console.promptForIntRange("> ",1,10, false, 99);
                 switch (option) {
                     case 1:
                         processGetByPriceRequest();
@@ -101,8 +101,8 @@ public class UserInterface {
     }
 
     private void processGetByYearRequest(){
-        int minYearInput = Console.promptForIntRange("Enter Minimum Year: ", Dealership.MIN_VEHICLE_YEAR, Dealership.MAX_VEHICLE_YEAR);
-        int maxYearInput = Console.promptForIntRange("Enter Maximum Year: ", minYearInput, Dealership.MAX_VEHICLE_YEAR);
+        int minYearInput = Console.promptForIntRange("Enter Minimum Year: ", Dealership.MIN_VEHICLE_YEAR, Dealership.MAX_VEHICLE_YEAR, true);
+        int maxYearInput = Console.promptForIntRange("Enter Maximum Year: ", minYearInput, Dealership.MAX_VEHICLE_YEAR, true);
         ArrayList<Vehicle> vehicles = dealership.getVehiclesByYear(minYearInput, maxYearInput);
         displayListOfVehicles(vehicles);
 
@@ -113,8 +113,8 @@ public class UserInterface {
         displayListOfVehicles(vehicles);
     }
     private void processGetByMileageRequest(){
-        int minMileage = Console.promptForIntRange("Enter Minimum Mileage: ", 0, Dealership.MAX_MILEAGE);
-        int maxMileage = Console.promptForIntRange("Enter Maximum Mileage: ", minMileage, Dealership.MAX_MILEAGE);
+        int minMileage = Console.promptForIntRange("Enter Minimum Mileage: ", 0, Dealership.MAX_MILEAGE, true);
+        int maxMileage = Console.promptForIntRange("Enter Maximum Mileage: ", minMileage, Dealership.MAX_MILEAGE, true);
         ArrayList<Vehicle> vehicles = dealership.getVehicleByMileage(minMileage, maxMileage);
         displayListOfVehicles(vehicles);
     }
@@ -137,12 +137,12 @@ public class UserInterface {
 
     private void processAddByRequest(){
         int vin = Console.promptForInt("Enter Vin Number: ");
-        int year = Console.promptForIntRange("Enter Year: ",  Dealership.MIN_VEHICLE_YEAR, Dealership.MAX_VEHICLE_YEAR);
+        int year = Console.promptForIntRange("Enter Year: ",  Dealership.MIN_VEHICLE_YEAR, Dealership.MAX_VEHICLE_YEAR, true);
         String make = Console.promptForString("Enter Make: ");
         String model = Console.promptForString("Enter Model: ");
         String vehicleType = Console.promptForString("Enter Vehicle Type: ");
         String color = Console.promptForString("Enter Color: ");
-        int odometer = Console.promptForIntRange("Enter Odometer: ",0, Dealership.MAX_MILEAGE);
+        int odometer = Console.promptForIntRange("Enter Odometer: ",0, Dealership.MAX_MILEAGE, true);
         double price = Console.promptForCurrencyRange("Enter Price: ", Dealership.MIN_VEHICLE_PRICE, Dealership.MAX_VEHICLE_PRICE, true);
         Vehicle vehicle = new Vehicle(vin, year, make, model, vehicleType, color, odometer, price);
 

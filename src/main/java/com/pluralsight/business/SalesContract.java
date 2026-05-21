@@ -17,7 +17,7 @@ public class SalesContract extends Contract{
         double monthlyInterestRate = getAnnualInterestRate() / 12;
         double feesPerMonth = (calculateSalesTax() + recordingFee + getProcessingFee()) / getTotalMonths();
         double monthlyPayment = getVehicle().getPrice() * (monthlyInterestRate * Math.pow(monthlyInterestRate + 1, getTotalMonths())) / (Math.pow(monthlyInterestRate + 1, getTotalMonths()) - 1); // MonthlyPayment = principal * (((monthlyRate)(monthlyRate + 1)^months) / (((1 + monthlyRate)^months) - 1))
-        monthlyPayment += feesPerMonth;
+        monthlyPayment += feesPerMonth; // Interest is not charged to fees
         return isFinance ? monthlyPayment : 0;
     }
 

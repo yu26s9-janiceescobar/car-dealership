@@ -26,8 +26,10 @@ public class DealershipFileManager {
 
             String line;
             while((line = bufReader.readLine()) != null){
-                Vehicle v = makeVehicleFromEncodedString(line);
-                d.addVehicle(v);
+                if (!line.isBlank()) {
+                    Vehicle v = makeVehicleFromEncodedString(line);
+                    d.addVehicle(v);
+                }
             }
 
 
@@ -49,13 +51,13 @@ public class DealershipFileManager {
         try{
             FileWriter fileWriter = new FileWriter(fileName);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            String firstLine = String.format("%s|%s|%s %n", dealership.getName(),dealership.getAddress(),dealership.getPhone());
+            String firstLine = String.format("%s|%s|%s%n", dealership.getName(),dealership.getAddress(),dealership.getPhone());
             bufferedWriter.write(firstLine);
 
             ArrayList<Vehicle> vehicles = dealership.getAllVehicles();
 
             for (Vehicle v: vehicles){
-                String vehicleInfo = String.format("%d|%d|%s|%s|%s|%s|%d|%.2f %n",
+                String vehicleInfo = String.format("%d|%d|%s|%s|%s|%s|%d|%.2f%n",
                         v.getVin(),
                         v.getYear(),
                         v.getMake() ,

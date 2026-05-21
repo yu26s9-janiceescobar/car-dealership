@@ -22,8 +22,10 @@ public class ContractFileManager {
 
             String line;
             while ((line = bufferedReader.readLine()) != null){
-                Contract contract = makeContractFromEncodedString(line);
-                contracts.add(contract);
+                if (!line.isBlank()) {
+                    Contract contract = makeContractFromEncodedString(line);
+                    contracts.add(contract);
+                }
             }
             bufferedReader.close();
         }catch(IOException e){
@@ -33,9 +35,7 @@ public class ContractFileManager {
     }
 
     private Contract makeContractFromEncodedString(String line){
-        if (line.isBlank()){
-            return null;
-        }
+
         Vehicle vehicle = makeVehicleFromEncodedString(line);
 
         String[] fileLine = line.split("\\|");

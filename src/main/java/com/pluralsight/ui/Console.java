@@ -25,9 +25,9 @@ public class Console {
     public static String promptForCharacterOptions(String prompt, String... options){
         while(true){
             String input = promptForString(prompt);
-            for (String o: options){
-                if (input.equalsIgnoreCase(o)){
-                    return o;
+            for (String option: options){
+                if (input.equalsIgnoreCase(option)){
+                    return option;
                 }
             }
             System.out.println("Must enter a valid option.");
@@ -131,13 +131,12 @@ public class Console {
      * @param options additional integers allowed to be entered, if needed.
      * @return the integer entered by user.
      */
-    public static int promptForIntRange(String prompt, int min, int max, int... options) {
+    public static int promptForIntRange(String prompt, int min, int max, boolean showHint, int... options) {
         while (true){
-            String input = promptForString(prompt);
-            if (options.length == 0){
-                System.out.printf("Must be between %d and %d", min, max);
+            if (showHint){
+                System.out.printf("Must be between %d and %d %n", min, max);
             }
-
+            String input = promptForString(prompt);
             try {
                 int userChoice = parseInt(input);
 
